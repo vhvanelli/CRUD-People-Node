@@ -1,10 +1,12 @@
 const { request, response } = require('express');
 const express = require('express');
-const uuid = require('uuid')
+const uuid = require('uuid');
+const cors = require('cors');
 
-const port = 3000;
+const port = 3001;
 const app = express();
 app.use(express.json())
+app.use(cors())
 
 //---------QUERY PARAMS------------------
 // app.get('/users', (request, response) => {
@@ -48,12 +50,12 @@ const checkUserId = (request,response,next) =>{
     request.userId = id
     next()
 }
-
-app.get("/users", (request,response)=>{    
+//Retorna todos os usuários
+app.get("/users", (request,response) => {    
     return response.json(users);
 });
-
-app.post("/users", (request,response)=>{    
+//Cria novo usuário
+app.post("/users", (request,response) => {    
     const { name, age } = request.body;
 
     const user = {id:uuid.v4() , name, age}
@@ -62,8 +64,8 @@ app.post("/users", (request,response)=>{
 
     return response.status(201).json(user);
 });
-
-app.put("/users/:id",checkUserId,(request, response)=>{
+// Atualiza o usuário
+app.put("/users/:id",checkUserId,(request, response) => {
     const { name, age } = request.body;
     const index = request.userIndex;
     const id = request.userId;
@@ -74,8 +76,8 @@ app.put("/users/:id",checkUserId,(request, response)=>{
 
     return response.json(updatedUser);
 })
-
-app.delete("/users/:id",checkUserId,(request, response)=>{
+// Deleta usuário
+app.delete("/users/:id",checkUserId,(request, response) => {
     const { id } = request.params;
     const index = request.userIndex;
 
